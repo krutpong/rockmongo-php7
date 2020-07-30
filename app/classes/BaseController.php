@@ -239,11 +239,19 @@ class BaseController extends RExtController {
 		}
 		if ($label) {
 			$id = addslashes(isset($var["_id"]) ? rock_id_string($var["_id"]) : "");
-			$string = preg_replace_callback("/(['\"])rockfield\\.(.+)\\.rockfield(['\"])/U", create_function('$match', '	$fields = explode(".rockfield.", $match[2]);
-					return "<span class=\"field\" field=\"" . implode(".", $fields) . "\">" . $match[1] . array_pop($fields) . $match[3] . "</span>";'), $string);
-			$string = preg_replace_callback("/__rockmore\\.(.+)\\.rockmore__/U", create_function('$match', '
-			$field = str_replace("rockfield.", "", $match[1]);
-			return "<a href=\"#\" onclick=\"fieldOpMore(\'" . $field . "\',\'' . $id . '\');return false;\" title=\"More text\">[...]</a>";'), $string);
+			$string = preg_replace_callback("/(['\"])rockfield\\.(.+)\\.rockfield(['\"])/U", 
+				function($match) {
+					$fields = explode(".rockfield.", $match[2]);
+					return "<span class=\"field\" field=\"" . implode(".", $fields) . "\">" . $match[1] . array_pop($fields) . $match[3] . "</span>";
+				}, $string
+			);
+			
+			$string = preg_replace_callback("/__rockmore\\.(.+)\\.rockmore__/U", 
+				function ($match) {
+					$field = str_replace("rockfield.", "", $match[1]);
+					return "<a href=\"#\" onclick=\"fieldOpMore(\'" . $field . "\',\'' . $id . '\');return false;\" title=\"More text\">[...]</a>";
+				}, $string
+			);
 		}
 		return $string;
 	}
