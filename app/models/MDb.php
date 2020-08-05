@@ -30,12 +30,11 @@ class MDb {
 		$query = $db->execute("function (){ return db.getCollectionNames(); }", array());
         if ($query["ok"]) {
             $names= $query["retval"];
-        } 
-        else{
-            $colls = $db->listCollections(true);
-            foreach($colls as $coll){
+        } else {
+            $colls = $db->listCollections(['includeSystemCollections' => true]);
+            foreach($colls as $coll) {
                 $names[] = $coll->getName();
-            }               
+            }
         }
 
 		$ret = array();
