@@ -221,7 +221,12 @@ class ServerController extends BaseController {
 				return;
 			}
 			$this->message = "New database created.";
-			$this->_mongo->selectDb($name)->execute("function(){}");
+			$db = $this->_mongo->selectDB($name);
+			MCollection::createCollection($db, '_default', array(
+				"capped" => 0,
+				"size" => 0,
+				"max" => 0
+			));
 		}
 		$this->display();
 	}
